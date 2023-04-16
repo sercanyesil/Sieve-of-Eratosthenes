@@ -1,28 +1,25 @@
-import kotlin.math.sqrt
-import kotlin.random.Random
+import java.util.*
 
-fun main() {
-    //Realize that as the number of points increases, it gets closer to the true PI value
-    println("Enter the number of points:")
-    val n = readlnOrNull()?.toIntOrNull() ?: return
+fun main(args: Array<String>) {
+    val soe = SieveofEratosthenes()
+    println("Please write an integer number:")
+    val sc = Scanner(System.`in`)
+    val n = sc.nextInt()
+    soe.countNumberOfPrimesUpTo(n)
+}
 
-    var numberInCircle = 0
-    val start = System.currentTimeMillis()
+class SieveofEratosthenes {
+    fun countNumberOfPrimesUpTo(n: Int) {
+        val list = BooleanArray(n + 1) { true }
+        list[0] = false
+        list[1] = false
 
-    repeat(n) {
-        val x = Random.nextDouble()
-        val y = Random.nextDouble()
-        val distance = sqrt(x * x + y * y)
-        if (distance <= 1) {
-            numberInCircle++
+        for (i in 2..n) {
+            if (list[i] == true)
+                for (j in 2..(n / i))
+                    list[i * j] = false
         }
+        val numberOfPrimes = list.count { it }
+        println("There are $numberOfPrimes prime numbers up to $n")
     }
-
-    val end = System.currentTimeMillis()
-    val time = end - start
-
-    val myPi = 4.0 * numberInCircle / n
-    println("My pi: $myPi")
-    println("Kotlin's pi: ${Math.PI}")
-    println("Time: $time ms.")
 }
